@@ -52,7 +52,7 @@ const Navbar = () => {
                      relative after:block after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5
                      after:bg-fuchsia-500 after:transition-all after:duration-300 hover:after:w-full"
                 >
-                    Contact Us
+                    Contact us
                 </a>
 
                 <a
