@@ -8,12 +8,15 @@ const MessageModal = ({ message, type, onClose }) => {
   if (!message) return null;
 
   const bgColor = type === "success" ? "bg-green-600" : "bg-red-600";
-  const borderColor = type === "success" ? "border-green-700" : "border-red-700";
+  const borderColor =
+    type === "success" ? "border-green-700" : "border-red-700";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className={`${bgColor} text-white p-6 rounded-lg shadow-xl border-b-4 ${borderColor} transform transition-all duration-300 ease-out scale-100 opacity-100`}>
+      <div
+        className={`${bgColor} text-white p-6 rounded-lg shadow-xl border-b-4 ${borderColor} transform transition-all duration-300 ease-out scale-100 opacity-100`}
+      >
         <p className="text-lg font-semibold mb-4">{message}</p>
         <button
           onClick={onClose}
@@ -25,7 +28,6 @@ const MessageModal = ({ message, type, onClose }) => {
     </div>
   );
 };
-
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -44,9 +46,14 @@ const AuthPage = () => {
 
   // IMPORTANT: Ensure these are set in your environment variables for Cloudinary to work.
   // For Canvas, typically environment variables are provided at runtime or through platform settings.
-  const CLOUD_NAME = typeof import.meta.env.VITE_CLOUDINARY_CLOUD_NAME !== 'undefined' ? import.meta.env.VITE_CLOUDINARY_CLOUD_NAME : 'your_cloudinary_cloud_name';
-  const CLOUD_PRESET = typeof import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET !== 'undefined' ? import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET : 'your_cloudinary_upload_preset';
-
+  const CLOUD_NAME =
+    typeof import.meta.env.VITE_CLOUDINARY_CLOUD_NAME !== "undefined"
+      ? import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+      : "your_cloudinary_cloud_name";
+  const CLOUD_PRESET =
+    typeof import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET !== "undefined"
+      ? import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      : "your_cloudinary_upload_preset";
 
   const showMessage = (msg, type) => {
     setMessage(msg);
@@ -62,8 +69,16 @@ const AuthPage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!CLOUD_NAME || CLOUD_NAME === 'your_cloudinary_cloud_name' || !CLOUD_PRESET || CLOUD_PRESET === 'your_cloudinary_upload_preset') {
-      showMessage("Cloudinary configuration missing. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your environment.", "error");
+    if (
+      !CLOUD_NAME ||
+      CLOUD_NAME === "your_cloudinary_cloud_name" ||
+      !CLOUD_PRESET ||
+      CLOUD_PRESET === "your_cloudinary_upload_preset"
+    ) {
+      showMessage(
+        "Cloudinary configuration missing. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your environment.",
+        "error"
+      );
       return;
     }
 
@@ -106,7 +121,10 @@ const AuthPage = () => {
         : "http://localhost:8000/api/auth/register";
 
       const response = await axios.post(endpoint, formData);
-      showMessage(`${isLogin ? "Login" : "Signup"} successful! Redirecting...`, "success");
+      showMessage(
+        `${isLogin ? "Login" : "Signup"} successful! Redirecting...`,
+        "success"
+      );
 
       // Assuming your backend sends a token and user data
       localStorage.setItem("authToken", response.data.token);
@@ -114,19 +132,25 @@ const AuthPage = () => {
 
       // Navigate after a short delay to allow message to be seen
       setTimeout(() => navigate("/userpage"), 1500);
-
     } catch (error) {
       console.error("Auth error:", error);
-      showMessage("Error: " + (error.response?.data?.message || error.message || "Something went wrong."), "error");
+      showMessage(
+        "Error: " +
+          (error.response?.data?.message ||
+            error.message ||
+            "Something went wrong."),
+        "error"
+      );
     } finally {
       setSubmittingForm(false);
     }
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen
-                    bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] p-4 sm:p-6 md:p-8">
-
+    <div
+      className="relative flex items-center justify-center min-h-screen
+                    bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] p-4 sm:p-6 md:p-8"
+    >
       {/* Subtle Background Glows (matching Hero/About) */}
       <div className="absolute inset-0 z-0 opacity-20">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
@@ -134,43 +158,46 @@ const AuthPage = () => {
         <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col md:flex-row w-full max-w-5xl md:h-[650px]
-                      bg-gray-900/70 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden
-                      border border-gray-800">
-
+      <div
+        className="relative z-10 flex flex-col md:flex-row w-full max-w-5xl md:h-[650px]
+                      bg-gray-900 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden
+                      border border-gray-300"
+      >
         {/* Left Section - Form */}
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-8
-                         bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400">
-            {isLogin ? "Welcome Back!" : "Join Us Today!"}
+          <h2
+            className="text-3xl md:text-3xl font-extrabold text-center mb-8
+                         bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400"
+          >
+            {isLogin ? "Login" : "Sign Up"}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <>
                 <div className="relative">
-                  <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-white" />
                   <input
                     type="text"
                     name="name"
                     placeholder="Your Full Name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full border border-gray-700 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                               focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors duration-200"
+                    className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2  focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
                     required
                   />
                 </div>
                 <div className="relative">
-                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-200" />
                   <input
                     type="tel"
                     name="phone"
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full border border-gray-700 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                               focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors duration-200"
+                    className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
                     required
                   />
                 </div>
@@ -185,8 +212,8 @@ const AuthPage = () => {
                 placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border border-gray-700 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors duration-200"
+                className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                           focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
                 required
               />
             </div>
@@ -198,17 +225,24 @@ const AuthPage = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full border border-gray-700 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors duration-200"
+                className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                           focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
                 required
               />
             </div>
 
             {!isLogin && (
               <div className="mt-4">
-                <label htmlFor="profile-image-upload" className="block text-gray-300 text-sm font-medium mb-2 cursor-pointer flex items-center">
+                <label
+                  htmlFor="profile-image-upload"
+                  className="block text-gray-300 text-sm font-medium mb-2 cursor-pointer flex items-center"
+                >
                   <FiUpload className="mr-2 text-fuchsia-400" />
-                  {loadingImage ? "Uploading..." : (formData.image ? "Image Uploaded!" : "Upload Profile Picture (Optional)")}
+                  {loadingImage
+                    ? "Uploading..."
+                    : formData.image
+                    ? "Image Uploaded!"
+                    : "Upload Profile Picture"}
                 </label>
                 <input
                   id="profile-image-upload"
@@ -219,15 +253,19 @@ const AuthPage = () => {
                   disabled={loadingImage}
                 />
                 {formData.image && !loadingImage && (
-                  <img src={formData.image} alt="Profile Preview" className="w-20 h-20 rounded-full object-cover mt-2 mx-auto md:mx-0 border-2 border-purple-500 shadow-md" />
+                  <img
+                    src={formData.image}
+                    alt="Profile Preview"
+                    className="w-20 h-20 rounded-full object-cover mt-2 mx-auto md:mx-0 border-2 border-purple-500 shadow-md"
+                  />
                 )}
               </div>
             )}
 
             <button
               type="submit"
-              className="relative inline-flex items-center justify-center w-full px-6 py-3 rounded-full text-lg font-semibold tracking-wide
-                         bg-gradient-to-r from-indigo-800 to-blue-800 text-white shadow-lg overflow-hidden // Softer gradient, less shadow
+              className="relative cursor-pointer inline-flex items-center justify-center w-full px-6 py-3 rounded-full text-lg font-semibold tracking-wide
+                         bg-gradient-to-r from-indigo-800 to-purple-800 text-white shadow-lg overflow-hidden // Softer gradient, less shadow
                          transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out
                          focus:outline-none focus:ring-4 focus:ring-blue-700/50" // Adjusted focus ring
               disabled={submittingForm || loadingImage}
@@ -236,14 +274,32 @@ const AuthPage = () => {
               <span className="relative z-10 flex items-center justify-center">
                 {submittingForm ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     {isLogin ? "Logging In..." : "Registering..."}
                   </>
+                ) : isLogin ? (
+                  "Login"
                 ) : (
-                  isLogin ? "Login" : "Create Account"
+                  "Register"
                 )}
               </span>
             </button>
@@ -275,15 +331,20 @@ const AuthPage = () => {
             <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 mb-2">
               Your Learning Journey Starts Here
             </h3>
-            <p className="text-gray-300 text-md max-w-sm mx-auto">
-              Transform your notes into knowledge with smart, interactive quizzes.
+            <p className="text-gray-400 text-md max-w-sm mx-auto">
+              Transform your notes into knowledge with smart, interactive
+              quizzes.
             </p>
           </div>
         </div>
       </div>
 
       {/* Custom Message Modal */}
-      <MessageModal message={message} type={messageType} onClose={() => setMessage(null)} />
+      <MessageModal
+        message={message}
+        type={messageType}
+        onClose={() => setMessage(null)}
+      />
     </div>
   );
 };
