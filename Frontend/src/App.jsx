@@ -1,12 +1,16 @@
-import React from 'react';
-import LandingPage from './pages/Landingpage';
+import React from "react";
+import Landingpage from "./pages/Landingpage.jsx";
 
-const App = () => {
+import { Route, Routes } from "react-router-dom";
+import AuthPage from "./components/Authpage";
+
+function App() {
   return (
-    <div>
-      <LandingPage />
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<Landingpage />} />
+      <Route path="/login" element={<AuthPage />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
