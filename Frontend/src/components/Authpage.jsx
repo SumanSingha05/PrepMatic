@@ -1,33 +1,89 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FiMail, FiLock, FiUser, FiPhone, FiUpload } from "react-icons/fi"; // Import React Icons
 
-// Simple Message Modal Component (replaces alert())
-const MessageModal = ({ message, type, onClose }) => {
-  if (!message) return null;
+// Inline SVG Icons (replacing react-icons/fi)
+const MailIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+  </svg>
+);
 
-  const bgColor = type === "success" ? "bg-green-600" : "bg-red-600";
-  const borderColor =
-    type === "success" ? "border-green-700" : "border-red-700";
+const LockIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+  </svg>
+);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div
-        className={`${bgColor} text-white p-6 rounded-lg shadow-xl border-b-4 ${borderColor} transform transition-all duration-300 ease-out scale-100 opacity-100`}
-      >
-        <p className="text-lg font-semibold mb-4">{message}</p>
-        <button
-          onClick={onClose}
-          className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-        >
-          Dismiss
-        </button>
-      </div>
-    </div>
-  );
-};
+const UserIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+  </svg>
+);
+
+const PhoneIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-3.67A19.79 19.79 0 0 1 2 6.18 2 2 0 0 1 4.18 4h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 12a14.32 14.32 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+  </svg>
+);
+
+const UploadIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+    <polyline points="17 8 12 3 7 8"></polyline>
+    <line x1="12" y1="3" x2="12" y2="15"></line>
+  </svg>
+);
+
+// MessageModal component and related icon components (CheckCircleIcon, XCircleIcon) have been removed.
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -41,25 +97,15 @@ const AuthPage = () => {
   });
   const [loadingImage, setLoadingImage] = useState(false);
   const [submittingForm, setSubmittingForm] = useState(false);
-  const [message, setMessage] = useState(null); // For custom messages
-  const [messageType, setMessageType] = useState("info"); // success or error
+  // 'message' and 'messageType' state variables have been removed.
 
-  // IMPORTANT: Ensure these are set in your environment variables for Cloudinary to work.
-  // For Canvas, typically environment variables are provided at runtime or through platform settings.
-  const CLOUD_NAME =
-    typeof import.meta.env.VITE_CLOUDINARY_CLOUD_NAME !== "undefined"
-      ? import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-      : "your_cloudinary_cloud_name";
-  const CLOUD_PRESET =
-    typeof import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET !== "undefined"
-      ? import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
-      : "your_cloudinary_upload_preset";
+  // IMPORTANT: For Cloudinary to work, replace these placeholder values with your actual
+  // Cloudinary Cloud Name and Upload Preset. In a production environment, these would be
+  // securely managed (e.g., via server-side environment variables).
+  const CLOUD_NAME = "your_cloudinary_cloud_name"; // Replace with your Cloudinary Cloud Name
+  const CLOUD_PRESET = "your_cloudinary_upload_preset"; // Replace with your Cloudinary Upload Preset
 
-  const showMessage = (msg, type) => {
-    setMessage(msg);
-    setMessageType(type);
-    setTimeout(() => setMessage(null), 5000); // Hide after 5 seconds
-  };
+  // 'showMessage' function has been removed.
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -70,15 +116,13 @@ const AuthPage = () => {
     if (!file) return;
 
     if (
-      !CLOUD_NAME ||
       CLOUD_NAME === "your_cloudinary_cloud_name" ||
-      !CLOUD_PRESET ||
       CLOUD_PRESET === "your_cloudinary_upload_preset"
     ) {
-      showMessage(
-        "Cloudinary configuration missing. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your environment.",
-        "error"
+      console.warn(
+        "Cloudinary configuration missing. Please replace 'your_cloudinary_cloud_name' and 'your_cloudinary_upload_preset' in the code."
       );
+      // No pop-up shown, logging to console instead.
       return;
     }
 
@@ -98,13 +142,12 @@ const AuthPage = () => {
       const result = await res.json();
       if (result.secure_url) {
         setFormData((prev) => ({ ...prev, image: result.secure_url }));
-        showMessage("Profile image uploaded successfully!", "success");
+        console.log("Profile image uploaded successfully!"); // No pop-up shown, logging to console instead.
       } else {
-        showMessage("Image upload failed. Please try again.", "error");
+        console.error("Image upload failed. Please try again."); // No pop-up shown, logging to console instead.
       }
     } catch (err) {
-      console.error("Image upload error:", err);
-      showMessage("Image upload failed: " + err.message, "error");
+      console.error("Image upload error:", err); // No pop-up shown, logging to console instead.
     } finally {
       setLoadingImage(false);
     }
@@ -121,26 +164,22 @@ const AuthPage = () => {
         : "http://localhost:8000/api/auth/register";
 
       const response = await axios.post(endpoint, formData);
-      showMessage(
-        `${isLogin ? "Login" : "Signup"} successful! Redirecting...`,
-        "success"
-      );
+      console.log(`${isLogin ? "Login" : "Signup"} successful! Redirecting...`); // No pop-up shown, logging to console instead.
 
       // Assuming your backend sends a token and user data
       localStorage.setItem("authToken", response.data.token);
       localStorage.setItem("profileImage", response.data.user.image || "");
 
-      // Navigate after a short delay to allow message to be seen
+      // Navigate after a short delay
       setTimeout(() => navigate("/userpage"), 1500);
     } catch (error) {
-      console.error("Auth error:", error);
-      showMessage(
-        "Error: " +
-          (error.response?.data?.message ||
-            error.message ||
-            "Something went wrong."),
-        "error"
+      console.error(
+        "Auth error:",
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong."
       );
+      // No pop-up shown, logging to console instead.
     } finally {
       setSubmittingForm(false);
     }
@@ -149,7 +188,7 @@ const AuthPage = () => {
   return (
     <div
       className="relative flex items-center justify-center min-h-screen
-                    bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] p-4 sm:p-6 md:p-8"
+                   bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] p-4 sm:p-6 md:p-8 font-inter"
     >
       {/* Subtle Background Glows (matching Hero/About) */}
       <div className="absolute inset-0 z-0 opacity-20">
@@ -160,14 +199,14 @@ const AuthPage = () => {
 
       <div
         className="relative z-10 flex flex-col md:flex-row w-full max-w-5xl md:h-[650px]
-                      bg-gray-900 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden
-                      border border-gray-300"
+                     bg-gray-900 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden
+                     border border-gray-700"
       >
         {/* Left Section - Form */}
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
           <h2
             className="text-3xl md:text-3xl font-extrabold text-center mb-8
-                         bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400"
+                        bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400"
           >
             {isLogin ? "Login" : "Sign Up"}
           </h2>
@@ -176,28 +215,28 @@ const AuthPage = () => {
             {!isLogin && (
               <>
                 <div className="relative">
-                  <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-white" />
+                  <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
                     name="name"
                     placeholder="Your Full Name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                               focus:outline-none focus:ring-2  focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
+                    className="w-full border border-gray-600 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-purple-600 transition-colors duration-200"
                     required
                   />
                 </div>
                 <div className="relative">
-                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-200" />
+                  <PhoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="tel"
                     name="phone"
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                               focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
+                    className="w-full border border-gray-600 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-purple-600 transition-colors duration-200"
                     required
                   />
                 </div>
@@ -205,28 +244,28 @@ const AuthPage = () => {
             )}
 
             <div className="relative">
-              <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="email"
                 name="email"
                 placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
+                className="w-full border border-gray-600 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-purple-600 transition-colors duration-200"
                 required
               />
             </div>
             <div className="relative">
-              <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="password"
                 name="password"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full border border-gray-400 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
-                           focus:outline-none focus:ring-2 focus:ring-indigo-800 focus:border-purple-800 transition-colors duration-200"
+                className="w-full border border-gray-600 rounded-lg px-4 py-3 pl-10 bg-gray-800 text-gray-200 placeholder-gray-500
+                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-purple-600 transition-colors duration-200"
                 required
               />
             </div>
@@ -237,12 +276,13 @@ const AuthPage = () => {
                   htmlFor="profile-image-upload"
                   className="block text-gray-300 text-sm font-medium mb-2 cursor-pointer flex items-center"
                 >
-                  <FiUpload className="mr-2 text-fuchsia-400" />
+                  <UploadIcon className="mr-2 text-fuchsia-400 w-5 h-5" />
                   {loadingImage
                     ? "Uploading..."
                     : formData.image
                     ? "Image Uploaded!"
-                    : "Upload Profile Picture"}
+                    : "Upload Profile Picture (Optional)"}{" "}
+                  {/* Made optional */}
                 </label>
                 <input
                   id="profile-image-upload"
@@ -265,12 +305,11 @@ const AuthPage = () => {
             <button
               type="submit"
               className="relative cursor-pointer inline-flex items-center justify-center w-full px-6 py-3 rounded-full text-lg font-semibold tracking-wide
-                         bg-gradient-to-r from-indigo-800 to-purple-800 text-white shadow-lg overflow-hidden // Softer gradient, less shadow
-                         transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out
-                         focus:outline-none focus:ring-4 focus:ring-blue-700/50" // Adjusted focus ring
+                               bg-gradient-to-r from-indigo-700 to-purple-700 text-white shadow-lg overflow-hidden
+                               transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out
+                               focus:outline-none focus:ring-4 focus:ring-blue-700/50"
               disabled={submittingForm || loadingImage}
             >
-              {/* Removed glow effect for a more sober look */}
               <span className="relative z-10 flex items-center justify-center">
                 {submittingForm ? (
                   <>
@@ -310,7 +349,7 @@ const AuthPage = () => {
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
               type="button"
-              className="text-blue-300 hover:underline font-medium transition-colors duration-200 hover:text-purple-300" // Softer color, subtle hover
+              className="text-blue-300 hover:underline font-medium transition-colors duration-200 hover:text-purple-300"
               onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin ? "Sign Up" : "Login Here"}
@@ -323,7 +362,7 @@ const AuthPage = () => {
           <img
             src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Study and Learning Visual"
-            className="w-full h-full object-cover rounded-r-3xl" // Apply rounded corners to match container
+            className="w-full h-full object-cover rounded-r-3xl"
           />
           {/* Optional: Dark overlay on image for consistency */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-r-3xl"></div>
@@ -339,12 +378,7 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Custom Message Modal */}
-      <MessageModal
-        message={message}
-        type={messageType}
-        onClose={() => setMessage(null)}
-      />
+      {/* The MessageModal component and its usage have been completely removed. */}
     </div>
   );
 };
