@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Keep useNavigate for navigation logic
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// Inline SVG Icons
+
 const MailIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -83,114 +83,9 @@ const UploadIcon = (props) => (
   </svg>
 );
 
-const CheckIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <polyline points="20 6 9 17 4 12"></polyline>
-  </svg>
-);
 
-const XIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-);
 
-const InfoIcon = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <circle cx="12" cy="12" r="10"></circle>
-    <line x1="12" y1="16" x2="12" y2="12"></line>
-    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-  </svg>
-);
-
-// ToastMessage Component
-const ToastMessage = ({ message, type, onClose }) => {
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        onClose(); // Auto-dismiss after 4 seconds
-      }, 4000);
-      return () => clearTimeout(timer); // Cleanup timer on unmount or message change
-    }
-  }, [message, onClose]);
-
-  if (!message) return null;
-
-  let bgColor = "bg-gray-800";
-  let textColor = "text-white";
-  let icon = <InfoIcon className="w-5 h-5 text-blue-400" />;
-
-  if (type === "success") {
-    bgColor = "bg-green-300";
-    textColor = "text-black";
-    icon = <CheckIcon className="w-5 h-5 text-white" />;
-  } else if (type === "error") {
-    bgColor = "bg-red-300";
-    textColor = "text-black";
-    icon = <XIcon className="w-5 h-5 text-white" />;
-  } else if (type === "warning") {
-    bgColor = "bg-yellow-300";
-    textColor = "text-gray-900";
-    icon = <InfoIcon className="w-5 h-5 text-gray-900" />;
-  }
-
-  return (
-    <div
-      className={`fixed top-4 left-4 z-50 flex items-center p-4 rounded-lg shadow-lg
-                  ${bgColor} ${textColor} transform transition-all duration-300 ease-out
-                  ${
-                    message
-                      ? "translate-x-0 opacity-100"
-                      : "-translate-x-full opacity-0"
-                  }`}
-      role="alert"
-    >
-      {icon}
-      <div className="ml-3 text-sm font-medium">{message}</div>
-      <button
-        type="button"
-        className={`ml-auto -mx-1.5 -my-1.5 ${textColor} rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5
-                    hover:bg-opacity-20 inline-flex items-center justify-center h-8 w-8`}
-        onClick={onClose}
-        aria-label="Close"
-      >
-        <span className="sr-only">Close</span>
-        <XIcon className="w-4 h-4" />
-      </button>
-    </div>
-  );
-};
-
-function AuthPage() {
-  // Renamed from App to AuthPage for consistency
+const AuthPage = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -202,19 +97,11 @@ function AuthPage() {
   });
   const [loadingImage, setLoadingImage] = useState(false);
   const [submittingForm, setSubmittingForm] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState("info");
+ 
+  const CLOUD_NAME = "your_cloudinary_cloud_name"; 
+  const CLOUD_PRESET = "your_cloudinary_upload_preset"; 
 
-  // IMPORTANT: For Cloudinary to work, replace these placeholder values with your actual
-  // Cloudinary Cloud Name and Upload Preset. In a production environment, these would be
-  // securely managed (e.g., via server-side environment variables).
-  const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME; // Replace with your Cloudinary Cloud Name
-  const CLOUD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET; // Replace with your Cloudinary Upload Preset
-
-  const showToast = (msg, type = "info") => {
-    setMessage(msg);
-    setMessageType(type);
-  };
+ 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -222,19 +109,16 @@ function AuthPage() {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) {
-      showToast("No image file selected.", "warning");
-      return;
-    }
+    if (!file) return;
 
     if (
-      CLOUD_NAME === "VITE_CLOUDINARY_CLOUD_NAME" ||
-      CLOUD_PRESET === "VITE_CLOUDINARY_UPLOAD_PRESET"
+      CLOUD_NAME === "your_cloudinary_cloud_name" ||
+      CLOUD_PRESET === "your_cloudinary_upload_preset"
     ) {
-      showToast(
-        "Cloudinary config missing. Image upload is disabled.",
-        "warning"
+      console.warn(
+        "Cloudinary configuration missing. Please replace 'your_cloudinary_cloud_name' and 'your_cloudinary_upload_preset' in the code."
       );
+      
       return;
     }
 
@@ -254,13 +138,12 @@ function AuthPage() {
       const result = await res.json();
       if (result.secure_url) {
         setFormData((prev) => ({ ...prev, image: result.secure_url }));
-        showToast("Profile image uploaded successfully!", "success");
+        console.log("Profile image uploaded successfully!"); 
       } else {
-        showToast("Image upload failed. Please try again.", "error");
+        console.error("Image upload failed. Please try again."); 
       }
     } catch (err) {
-      console.error("Image upload error:", err);
-      showToast("Image upload failed: " + err.message, "error");
+      console.error("Image upload error:", err); 
     } finally {
       setLoadingImage(false);
     }
@@ -268,46 +151,31 @@ function AuthPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Client-side validation before submission attempt
-    if (
-      !formData.email ||
-      !formData.password ||
-      (!isLogin && (!formData.name || !formData.phone))
-    ) {
-      showToast("Please fill in all required fields.", "warning");
-      return;
-    }
-
     setSubmittingForm(true);
 
     try {
-      // IMPORTANT: Ensure your backend is running at http://localhost:8000
+      
       const endpoint = isLogin
         ? "http://localhost:8000/api/auth/login"
         : "http://localhost:8000/api/auth/register";
 
       const response = await axios.post(endpoint, formData);
-      showToast(
-        `${isLogin ? "Login" : "Signup"} successful! Redirecting...`,
-        "success"
-      );
+      console.log(`${isLogin ? "Login" : "Signup"} successful! Redirecting...`); 
 
-      // Assuming your backend sends a token and user data
+      
       localStorage.setItem("authToken", response.data.token);
       localStorage.setItem("profileImage", response.data.user.image || "");
 
-      // Navigate after a short delay
+      
       setTimeout(() => navigate("/userpage"), 1500);
     } catch (error) {
-      console.error("Auth error:", error);
-      showToast(
-        "Error: " +
-          (error.response?.data?.message ||
-            error.message ||
-            "Something went wrong."),
-        "error"
+      console.error(
+        "Auth error:",
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong."
       );
+      
     } finally {
       setSubmittingForm(false);
     }
@@ -318,7 +186,7 @@ function AuthPage() {
       className="relative flex items-center justify-center min-h-screen
                    bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] p-4 sm:p-6 md:p-8 font-inter"
     >
-      {/* Subtle Background Glows (matching Hero/About) */}
+     
       <div className="absolute inset-0 z-0 opacity-20">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
         <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-fuchsia-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
@@ -330,7 +198,7 @@ function AuthPage() {
                      bg-gray-900 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden
                      border border-gray-700"
       >
-        {/* Left Section - Form */}
+      
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
           <h2
             className="text-3xl md:text-3xl font-extrabold text-center mb-8
@@ -409,14 +277,15 @@ function AuthPage() {
                     ? "Uploading..."
                     : formData.image
                     ? "Image Uploaded!"
-                    : "Upload Profile Picture (Optional)"}
+                    : "Upload Profile Picture (Optional)"}{" "}
+                  
                 </label>
                 <input
                   id="profile-image-upload"
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="hidden"
+                  className="hidden" 
                   disabled={loadingImage}
                 />
                 {formData.image && !loadingImage && (
@@ -471,7 +340,7 @@ function AuthPage() {
             </button>
           </form>
 
-          {/* Toggle */}
+         
           <p className="text-center text-gray-400 mt-6 text-md">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
@@ -484,14 +353,14 @@ function AuthPage() {
           </p>
         </div>
 
-        {/* Right Section - Aesthetic Visual */}
+        
         <div className="hidden md:flex md:w-1/2 relative">
           <img
-            src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="https://undraw.co/api/illustrations/5e4b5b6b-2e7d-4e2e-8e2e-5e4b5b6b2e7d"
             alt="Study and Learning Visual"
             className="w-full h-full object-cover rounded-r-3xl"
           />
-          {/* Optional: Dark overlay on image for consistency */}
+          
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-r-3xl"></div>
           <div className="absolute bottom-8 left-0 right-0 text-white text-center p-4">
             <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 mb-2">
@@ -505,14 +374,9 @@ function AuthPage() {
         </div>
       </div>
 
-      {/* Render the ToastMessage component */}
-      <ToastMessage
-        message={message}
-        type={messageType}
-        onClose={() => setMessage(null)}
-      />
+     
     </div>
   );
-}
+};
 
 export default AuthPage;
