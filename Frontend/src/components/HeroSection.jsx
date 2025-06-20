@@ -8,11 +8,11 @@ const HeroSection = () => {
     return (
         <section
             className="relative flex flex-col justify-center items-center text-center py-32 px-6 min-h-screen
-                 bg-[radial-gradient(circle,_#0A0A2A_0%,_#000000_100%)] overflow-hidden" // Deeper, richer dark blue
+                 bg-[radial-gradient(circle,#0A0A2A_0%,#000000_100%)] overflow-hidden"
         >
-            {/* Background Ornaments / Subtle Glows for Depth */}
+            
             <div className="absolute inset-0 z-0 opacity-40">
-                {/* Subtle radial light effect */}
+                
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
                 <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-fuchsia-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
@@ -53,10 +53,10 @@ const HeroSection = () => {
              transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-in-out
              focus:outline-none focus:ring-4 focus:ring-purple-500/50"
                 >
-                    {/* The Glow Effect Pseudo-element */}
+                    
                     <span className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 filter blur-lg animate-pulse-glow"></span>
 
-                    {/* Content wrapper for z-index - Ensures text and icon are always on top */}
+                    
                     <span className="relative z-10 inline-flex items-center">
                         Get Started Now
                         <svg className="ml-3 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
