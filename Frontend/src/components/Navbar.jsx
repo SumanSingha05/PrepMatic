@@ -4,7 +4,7 @@
 const Navbar = () => {
     return (
         <nav className="flex justify-between items-center px-8 py-4 bg-[radial-gradient(circle,_#1e3a8a_0%,_#000_100%)] h-25">
-              
+
 
             <h1 className="text-[30px] font-bold text-white">Our website</h1>
             <div className="space-x-6 text-[20px] flex items-center gap-4">
