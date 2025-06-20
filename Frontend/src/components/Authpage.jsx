@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Keep useNavigate for navigation logic
 import axios from "axios";
 
-// Inline SVG Icons (replacing react-icons/fi)
+// Inline SVG Icons
 const MailIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -83,9 +83,114 @@ const UploadIcon = (props) => (
   </svg>
 );
 
-// MessageModal component and related icon components (CheckCircleIcon, XCircleIcon) have been removed.
+const CheckIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
 
-const AuthPage = () => {
+const XIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+const InfoIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  </svg>
+);
+
+// ToastMessage Component
+const ToastMessage = ({ message, type, onClose }) => {
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        onClose(); // Auto-dismiss after 4 seconds
+      }, 4000);
+      return () => clearTimeout(timer); // Cleanup timer on unmount or message change
+    }
+  }, [message, onClose]);
+
+  if (!message) return null;
+
+  let bgColor = "bg-gray-800";
+  let textColor = "text-white";
+  let icon = <InfoIcon className="w-5 h-5 text-blue-400" />;
+
+  if (type === "success") {
+    bgColor = "bg-green-300";
+    textColor = "text-black";
+    icon = <CheckIcon className="w-5 h-5 text-white" />;
+  } else if (type === "error") {
+    bgColor = "bg-red-300";
+    textColor = "text-black";
+    icon = <XIcon className="w-5 h-5 text-white" />;
+  } else if (type === "warning") {
+    bgColor = "bg-yellow-300";
+    textColor = "text-gray-900";
+    icon = <InfoIcon className="w-5 h-5 text-gray-900" />;
+  }
+
+  return (
+    <div
+      className={`fixed top-4 left-4 z-50 flex items-center p-4 rounded-lg shadow-lg
+                  ${bgColor} ${textColor} transform transition-all duration-300 ease-out
+                  ${
+                    message
+                      ? "translate-x-0 opacity-100"
+                      : "-translate-x-full opacity-0"
+                  }`}
+      role="alert"
+    >
+      {icon}
+      <div className="ml-3 text-sm font-medium">{message}</div>
+      <button
+        type="button"
+        className={`ml-auto -mx-1.5 -my-1.5 ${textColor} rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5
+                    hover:bg-opacity-20 inline-flex items-center justify-center h-8 w-8`}
+        onClick={onClose}
+        aria-label="Close"
+      >
+        <span className="sr-only">Close</span>
+        <XIcon className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
+
+function AuthPage() {
+  // Renamed from App to AuthPage for consistency
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -97,15 +202,19 @@ const AuthPage = () => {
   });
   const [loadingImage, setLoadingImage] = useState(false);
   const [submittingForm, setSubmittingForm] = useState(false);
-  // 'message' and 'messageType' state variables have been removed.
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("info");
 
   // IMPORTANT: For Cloudinary to work, replace these placeholder values with your actual
   // Cloudinary Cloud Name and Upload Preset. In a production environment, these would be
   // securely managed (e.g., via server-side environment variables).
-  const CLOUD_NAME = "your_cloudinary_cloud_name"; // Replace with your Cloudinary Cloud Name
-  const CLOUD_PRESET = "your_cloudinary_upload_preset"; // Replace with your Cloudinary Upload Preset
+  const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME; // Replace with your Cloudinary Cloud Name
+  const CLOUD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET; // Replace with your Cloudinary Upload Preset
 
-  // 'showMessage' function has been removed.
+  const showToast = (msg, type = "info") => {
+    setMessage(msg);
+    setMessageType(type);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -113,16 +222,19 @@ const AuthPage = () => {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      showToast("No image file selected.", "warning");
+      return;
+    }
 
     if (
-      CLOUD_NAME === "your_cloudinary_cloud_name" ||
-      CLOUD_PRESET === "your_cloudinary_upload_preset"
+      CLOUD_NAME === "VITE_CLOUDINARY_CLOUD_NAME" ||
+      CLOUD_PRESET === "VITE_CLOUDINARY_UPLOAD_PRESET"
     ) {
-      console.warn(
-        "Cloudinary configuration missing. Please replace 'your_cloudinary_cloud_name' and 'your_cloudinary_upload_preset' in the code."
+      showToast(
+        "Cloudinary config missing. Image upload is disabled.",
+        "warning"
       );
-      // No pop-up shown, logging to console instead.
       return;
     }
 
@@ -142,12 +254,13 @@ const AuthPage = () => {
       const result = await res.json();
       if (result.secure_url) {
         setFormData((prev) => ({ ...prev, image: result.secure_url }));
-        console.log("Profile image uploaded successfully!"); // No pop-up shown, logging to console instead.
+        showToast("Profile image uploaded successfully!", "success");
       } else {
-        console.error("Image upload failed. Please try again."); // No pop-up shown, logging to console instead.
+        showToast("Image upload failed. Please try again.", "error");
       }
     } catch (err) {
-      console.error("Image upload error:", err); // No pop-up shown, logging to console instead.
+      console.error("Image upload error:", err);
+      showToast("Image upload failed: " + err.message, "error");
     } finally {
       setLoadingImage(false);
     }
@@ -155,6 +268,17 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Client-side validation before submission attempt
+    if (
+      !formData.email ||
+      !formData.password ||
+      (!isLogin && (!formData.name || !formData.phone))
+    ) {
+      showToast("Please fill in all required fields.", "warning");
+      return;
+    }
+
     setSubmittingForm(true);
 
     try {
@@ -164,7 +288,10 @@ const AuthPage = () => {
         : "http://localhost:8000/api/auth/register";
 
       const response = await axios.post(endpoint, formData);
-      console.log(`${isLogin ? "Login" : "Signup"} successful! Redirecting...`); // No pop-up shown, logging to console instead.
+      showToast(
+        `${isLogin ? "Login" : "Signup"} successful! Redirecting...`,
+        "success"
+      );
 
       // Assuming your backend sends a token and user data
       localStorage.setItem("authToken", response.data.token);
@@ -173,13 +300,14 @@ const AuthPage = () => {
       // Navigate after a short delay
       setTimeout(() => navigate("/userpage"), 1500);
     } catch (error) {
-      console.error(
-        "Auth error:",
-        error.response?.data?.message ||
-          error.message ||
-          "Something went wrong."
+      console.error("Auth error:", error);
+      showToast(
+        "Error: " +
+          (error.response?.data?.message ||
+            error.message ||
+            "Something went wrong."),
+        "error"
       );
-      // No pop-up shown, logging to console instead.
     } finally {
       setSubmittingForm(false);
     }
@@ -281,15 +409,14 @@ const AuthPage = () => {
                     ? "Uploading..."
                     : formData.image
                     ? "Image Uploaded!"
-                    : "Upload Profile Picture (Optional)"}{" "}
-                  {/* Made optional */}
+                    : "Upload Profile Picture (Optional)"}
                 </label>
                 <input
                   id="profile-image-upload"
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="hidden" // Hide the default file input
+                  className="hidden"
                   disabled={loadingImage}
                 />
                 {formData.image && !loadingImage && (
@@ -378,9 +505,14 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* The MessageModal component and its usage have been completely removed. */}
+      {/* Render the ToastMessage component */}
+      <ToastMessage
+        message={message}
+        type={messageType}
+        onClose={() => setMessage(null)}
+      />
     </div>
   );
-};
+}
 
 export default AuthPage;
